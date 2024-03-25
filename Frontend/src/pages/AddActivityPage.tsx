@@ -7,12 +7,25 @@ const AddActivityPage: React.FC = () => {
   const [url, setUrl] = useState(''); // Additional field for activity URL if applicable
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Logic to add the activity (e.g., API call)
-    console.log({ title, description, url });
-
-    navigate('/activities'); // Navigate back to activities page after submission
+    try {
+      const response = await fetch('http://localhost:5000/api/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description, url }),
+      });
+      if (response.ok) {
+        console.log('Activity added successfully');
+        navigate('/activities'); // Navigate back to activities page after successful submission
+      } else {
+        console.log('Failed to add activity');
+      }
+    } catch (error) {
+      console.log('Error:', error);
+    }
   };
 
   return (
